@@ -74,6 +74,7 @@ export default function Home() {
   const [itemName, setItemName] = useState('');
   const [section, setSection] = useState('snacks');
   const [quantity, setQuantity] = useState(1);
+  const [filterSection, setFilterSection] = useState('');
 
   const updateInventory = async () => {
     const snapshot = query(collection(firestore, 'pantry_store'));
@@ -145,6 +146,7 @@ export default function Home() {
 
     await batch.commit();
     updateInventory();
+    setFilterSection('');
     alert("All items have been deleted.");
   };
   return (
@@ -276,8 +278,26 @@ export default function Home() {
         </Stack>
       </Box>
       <Box border={'1px solid #333'}  bgcolor={'#F5F5DC'}>
+      <Box display="flex" justifyContent="center" alignItems="center" padding={2} sx={{ bgcolor: '#e0e0e0' }} >
+          <Select 
+         
+            labelId="filter-section-select-label"
+            id="filter-section-select"
+            value={filterSection}
+            onChange={(e) => setFilterSection(e.target.value)}
+            displayEmpty
+            fullWidth
+          >
+            <MenuItem value="" >All Sections</MenuItem>
+            {Object.keys(sectionItems).map((sectionKey) => (
+              <MenuItem key={sectionKey} value={sectionKey}>
+                {sectionKey.charAt(0).toUpperCase() + sectionKey.slice(1)}
+              </MenuItem>
+            ))}
+          </Select>
+        </Box>
         <Stack width="1000px" height="300px" spacing={2} overflow={'auto'}>
-          {inventory.map(({ name, quantity , section}) => (
+        {inventory.filter(({ section }) => !filterSection || section === filterSection).map(({ name, quantity, section }) => (
             <Box
               key={name}
               width="100%"
