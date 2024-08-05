@@ -1,6 +1,7 @@
 'use client'
 
 import Image from "next/image";
+import { app, analytics } from '@/firebase'
 import { useState, useEffect } from 'react';
 import { Box, Stack, Typography, Button, Modal, IconButton, MenuItem, Select} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
